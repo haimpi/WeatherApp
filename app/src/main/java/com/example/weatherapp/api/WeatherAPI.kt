@@ -1,5 +1,6 @@
 package com.example.weatherapp.api
 
+import com.example.weatherapp.models.CityResponse
 import com.example.weatherapp.models.WeatherResponse
 import com.example.weatherapp.util.Constants.Companion.API_KEY
 import retrofit2.Response
@@ -19,4 +20,17 @@ interface WeatherAPI {
         @Query("appid")
         apiKey : String = API_KEY
     ) : Response<WeatherResponse>
+
+
+//--------------arthur code--------
+    @GET("geo/1.0/direct")
+    suspend fun getCoordinates(
+        @Query("q") city: String,
+        @Query("limit") limit: Int = 1,
+        @Query("appid") apiKey: String = API_KEY
+    ): Response<List<CityResponse>>
+//---------------------------------
+
+
+
 }

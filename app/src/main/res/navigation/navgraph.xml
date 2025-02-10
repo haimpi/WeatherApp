@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/navgraph"
-    app:startDestination="@id/weatherLocalFragment">
+    app:startDestination="@id/citySearchFragment">
 
     <fragment
         android:id="@+id/weatherLocalFragment"
@@ -16,4 +16,8 @@
         android:id="@+id/weatherSearchFragment"
         android:name="com.example.weatherapp.ui.fragments.WeatherSearchFragment"
         android:label="WeatherSearchFragment" />
+    <fragment
+        android:id="@+id/citySearchFragment"
+        android:name="com.example.weatherapp.ui.fragments.CitySearchFragment"
+        android:label="CitySearchFragment" />
 </navigation>
