@@ -6,10 +6,15 @@
     <string name="label_temp">טמפרטורה: %s°C</string>
     <string name="label_wind">רוח: %s מטר/שנייה</string>
     <string name="search">חיפוש</string>
-    <string name="enter_country_code_e_g_us_il">הכנס קוד מדינה (לדוגמה: US, IL)</string>
+    <string name="enter_country_code_e_g_us_il">הכנס קוד מדינה</string>
     <string name="enter_city_name">הכנס שם עיר</string>
     <string name="loading">טוען...</string>
     <string name="error_fetching_weather">שגיאה בקבלת נתוני מזג האוויר</string>
     <string name="please_enter_city_country">נא להזין עיר ומדינה</string>
+    <string name="error_city_not_found">העיר לא נמצאה</string>
+    <string name="error_fetch_coordinates">נכשל אחזור קואורדינטות</string>
+    <string name="error_no_data">לא נמצאו נתונים</string>
+    <string name="error_fetch_weather">נכשל אחזור נתוני מזג האוויר</string>
+
 
 </resources>

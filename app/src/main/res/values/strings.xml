@@ -7,10 +7,13 @@
     <string name="label_temp">Temp: %s°C</string>
     <string name="label_wind">Wind: %s m/s</string>
     <string name="search">Search</string>
-    <string name="enter_country_code_e_g_us_il">Enter country code (e.g. US, IL)</string>
+    <string name="enter_country_code_e_g_us_il">Enter country</string>
     <string name="enter_city_name">Enter city name</string>
     <string name="loading">Loading...</string>
     <string name="error_fetching_weather">Error fetching weather</string>
     <string name="please_enter_city_country">Please enter city and country</string>
-
+    <string name="error_city_not_found">City not found</string>
+    <string name="error_fetch_coordinates">Failed to fetch city coordinates</string>
+    <string name="error_no_data">No data found</string>
+    <string name="error_fetch_weather">Failed to fetch weather</string>
 </resources>

@@ -52,7 +52,10 @@ class CitySearchFragment : Fragment() {
                     hideLoading()
                     with(binding) {
                         tvCity.text = getString(R.string.label_city, weather?.name ?: "Unknown")
-                        tvCountry.text = getString(R.string.label_country, weather?.sys?.country ?: "Unknown")
+                        tvCountry.text = getString(
+                            R.string.label_country,
+                            Locale("", weather?.sys?.country ?: "").displayCountry
+                        )
                         tvTemperature.text = getString(R.string.label_temp, weather?.main?.temp ?: 0)
                         tvWindSpeed.text = getString(R.string.label_wind, weather?.wind?.speed ?: 0)
 
