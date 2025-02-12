@@ -9,11 +9,11 @@
         android:name="com.example.weatherapp.ui.fragments.WeatherLocalFragment"
         android:label="WeatherLocalFragment" />
     <fragment
-        android:id="@+id/weatherSearchFragment"
-        android:name="com.example.weatherapp.ui.fragments.WeatherSearchFragment"
-        android:label="WeatherSearchFragment" />
-    <fragment
         android:id="@+id/weatherSettingsFragment"
         android:name="com.example.weatherapp.ui.fragments.WeatherSettingsFragment"
         android:label="WeatherSettingsFragment" />
+    <fragment
+        android:id="@+id/citySearchFragment"
+        android:name="com.example.weatherapp.ui.fragments.CitySearchFragment"
+        android:label="CitySearchFragment" />
 </navigation>

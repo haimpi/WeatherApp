@@ -1,5 +1,6 @@
 package com.example.weatherapp.api
 
+import com.example.weatherapp.models.CityResponse
 import com.example.weatherapp.models.forecast.ForecastResponse
 import com.example.weatherapp.models.WeatherResponse
 import com.example.weatherapp.util.Constants.Companion.API_KEY
@@ -32,4 +33,19 @@ interface WeatherAPI {
         @Query("appid")
         apiKey: String = API_KEY
     ) : Response<ForecastResponse>
+
+    @GET("geo/1.0/direct")
+    suspend fun getCoordinates(
+        @Query("q") city: String,
+        @Query("limit") limit: Int = 1,
+        @Query("appid") apiKey: String = API_KEY
+    ): Response<List<CityResponse>>
+
+    @GET("geo/1.0/direct")
+    suspend fun searchCities(
+        @Query("q") query: String,
+        @Query("limit") limit: Int = 5,  // להחזיר 5 תוצאות בלבד
+        @Query("appid") apiKey: String = API_KEY
+    ): Response<List<CityResponse>>
+
 }

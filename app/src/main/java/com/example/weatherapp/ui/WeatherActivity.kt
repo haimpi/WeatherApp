@@ -66,7 +66,7 @@ class WeatherActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.weatherSearchFragment -> {
-                navController.navigate(R.id.weatherSearchFragment)
+                navController.navigate(R.id.citySearchFragment)
                 return true
             }
             R.id.weatherSettingsFragment -> {

@@ -5,20 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.weatherapp.databinding.FragmentWeatherSearchBinding
+import com.example.weatherapp.databinding.FragmentWeatherSettingsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import il.co.syntax.fullarchitectureretrofithiltkotlin.utils.autoCleared
 
 @AndroidEntryPoint
-class WeatherSearchFragment : Fragment(){
-    private var binding: FragmentWeatherSearchBinding by autoCleared()
+class WeatherSettingsFragment : Fragment(){
+    private var binding: FragmentWeatherSettingsBinding by autoCleared()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentWeatherSearchBinding.inflate(inflater, container, false)
+        binding = FragmentWeatherSettingsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
