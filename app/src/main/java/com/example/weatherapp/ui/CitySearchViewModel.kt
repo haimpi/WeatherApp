@@ -14,7 +14,6 @@ import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Response
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,56 +37,34 @@ class CitySearchViewModel @Inject constructor(
     private fun loadCityList(context: Context) {
         viewModelScope.launch {
             try {
-                val locale = Locale.getDefault().language.lowercase()
-                val isHebrew = locale == "he" || locale.startsWith("iw")
-
-                val jsonFile = if (isHebrew) "cities_he.json" else "cities.json"
-                println("🔍 שפת המכשיר: $locale")
-                println("📂 טוען את הקובץ: $jsonFile")
-
-                val json = context.assets.open(jsonFile).bufferedReader().use { it.readText() }
+                val json = context.assets.open("cities.json").bufferedReader().use { it.readText() }
                 citiesMap = Gson().fromJson(json, object : TypeToken<Map<String, List<String>>>() {}.type)
-
-                println("📋 רשימת המדינות שהועלתה: ${citiesMap.keys.toList()}")
-
                 countryList.postValue(citiesMap.keys.toList())
-
-                // אם הייתה מדינה נבחרת לפני רענון, נטען אותה מחדש
-                selectedCountry.value?.let { savedCountry ->
-                    getCitiesForCountry(savedCountry)
-                }
             } catch (e: Exception) {
-                println("❌ שגיאה בטעינת הקובץ: ${e.message}")
                 countryList.postValue(emptyList())
             }
         }
     }
 
-
     fun getCitiesForCountry(selectedCountry: String) {
-        this.selectedCountry.postValue(selectedCountry) // שמירת המדינה שנבחרה
+        this.selectedCountry.postValue(selectedCountry)
         val cities = citiesMap[selectedCountry] ?: emptyList()
         cityList.postValue(cities)
 
-        // אם הייתה עיר נבחרת והיא עדיין קיימת ברשימה, נשחזר אותה
         selectedCity.value?.let { savedCity ->
             if (savedCity in cities) selectedCity.postValue(savedCity)
         }
     }
 
-
     fun getWeatherByCity(city: String, country: String) {
-        selectedCity.postValue(city) // שמירת העיר שנבחרה
+        selectedCity.postValue(city)
         weatherData.postValue(Resource.Loading())
 
         viewModelScope.launch {
             try {
                 val response = repository.getCoordinates(city, country)
                 if (response.isSuccessful) {
-                    val cityList = response.body()
-                    val firstCity = cityList?.firstOrNull()
-
-                    firstCity?.let {
+                    response.body()?.firstOrNull()?.let {
                         val weatherResponse = repository.getWeatherData(it.lat, it.lon, "metric")
                         handleWeatherResponse(weatherResponse)
                     } ?: weatherData.postValue(Resource.Error(app.getString(R.string.error_city_not_found)))
@@ -100,7 +77,6 @@ class CitySearchViewModel @Inject constructor(
         }
     }
 
-
     private fun handleWeatherResponse(response: Response<WeatherResponse>) {
         if (response.isSuccessful) {
             response.body()?.let {
@@ -112,7 +88,12 @@ class CitySearchViewModel @Inject constructor(
     }
 
     fun refreshData(context: Context) {
+        val currentCountry = selectedCountry.value
+        val currentCity = selectedCity.value
         loadCityList(context)
+        selectedCountry.postValue(currentCountry ?: citiesMap.keys.firstOrNull())
+        selectedCity.postValue(currentCity ?: citiesMap[selectedCountry.value]?.firstOrNull())
     }
 }
+
 
