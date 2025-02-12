@@ -1,57 +1,74 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
 
-    <EditText
-        android:id="@+id/etCityName"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/enter_city_name"/>
+        android:text="@string/select_country"
+        android:textSize="16sp"
+        android:paddingBottom="4dp"/>
 
-    <EditText
-        android:id="@+id/etCountryCode"
+    <Spinner
+        android:id="@+id/spinnerCountry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/enter_country_code_e_g_us_il"/>
+        android:padding="8dp"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/select_city"
+        android:textSize="16sp"
+        android:paddingBottom="4dp"/>
+
+    <Spinner
+        android:id="@+id/spinnerCity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_marginBottom="24dp"
+        android:enabled="false"/>
 
     <Button
         android:id="@+id/btnSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/search"/>
-
-    <TextView
-        android:id="@+id/tvCity"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"/>
+        android:text="@string/search"
+        android:layout_marginBottom="24dp"/>
 
     <TextView
         android:id="@+id/tvCountry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"/>
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:paddingTop="8dp"/>
+
+    <TextView
+        android:id="@+id/tvCity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:paddingTop="8dp"/>
 
     <TextView
         android:id="@+id/tvTemperature"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"/>
-
-    <TextView
-        android:id="@+id/tvHumidity"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"/>
+        android:textSize="20sp"
+        android:paddingTop="8dp"/>
 
     <TextView
         android:id="@+id/tvWindSpeed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"/>
+        android:textSize="20sp"
+        android:paddingTop="8dp"/>
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -59,6 +76,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="gone"/>
-
-
 </LinearLayout>
+

@@ -16,4 +16,6 @@
     <string name="error_fetch_coordinates">Failed to fetch city coordinates</string>
     <string name="error_no_data">No data found</string>
     <string name="error_fetch_weather">Failed to fetch weather</string>
+    <string name="select_country">Select country:</string>
+    <string name="select_city">Select city:</string>
 </resources>
