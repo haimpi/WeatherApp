@@ -6,7 +6,9 @@
     android:orientation="vertical"
     android:padding="20dp">
 
+
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="12dp"
@@ -108,5 +110,17 @@
         android:visibility="invisible"
         android:background="@android:color/transparent"
         android:layout_gravity="center_horizontal"/>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="12dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycleView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </androidx.cardview.widget.CardView>
+
 
 </LinearLayout>

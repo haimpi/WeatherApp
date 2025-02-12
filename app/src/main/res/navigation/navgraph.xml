@@ -7,13 +7,13 @@
     <fragment
         android:id="@+id/weatherLocalFragment"
         android:name="com.example.weatherapp.ui.fragments.WeatherLocalFragment"
-        android:label="WeatherLocalFragment" >
-        <action
-            android:id="@+id/action_weatherLocalFragment_to_weatherSearchFragment"
-            app:destination="@id/weatherSearchFragment" />
-    </fragment>
+        android:label="WeatherLocalFragment" />
     <fragment
         android:id="@+id/weatherSearchFragment"
         android:name="com.example.weatherapp.ui.fragments.WeatherSearchFragment"
         android:label="WeatherSearchFragment" />
+    <fragment
+        android:id="@+id/weatherSettingsFragment"
+        android:name="com.example.weatherapp.ui.fragments.WeatherSettingsFragment"
+        android:label="WeatherSettingsFragment" />
 </navigation>

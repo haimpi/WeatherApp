@@ -1,5 +1,6 @@
 package com.example.weatherapp.api
 
+import com.example.weatherapp.models.forecast.ForecastResponse
 import com.example.weatherapp.models.WeatherResponse
 import com.example.weatherapp.util.Constants.Companion.API_KEY
 import retrofit2.Response
@@ -19,4 +20,16 @@ interface WeatherAPI {
         @Query("appid")
         apiKey : String = API_KEY
     ) : Response<WeatherResponse>
+
+    @GET("data/2.5/forecast")
+    suspend fun getForecastData(
+        @Query("lat")
+        lat : Double,
+        @Query("lon")
+        lon : Double,
+        @Query("units")
+        units : String,
+        @Query("appid")
+        apiKey: String = API_KEY
+    ) : Response<ForecastResponse>
 }

@@ -5,17 +5,22 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.weatherapp.R
+import com.example.weatherapp.adapters.ForecastAdapter
 import com.example.weatherapp.databinding.FragmentWeatherLocalBinding
 import com.example.weatherapp.ui.WeatherViewModel
 import com.example.weatherapp.util.Resource
+import com.example.weatherapp.util.WeatherIconProvider
 import dagger.hilt.android.AndroidEntryPoint
 import il.co.syntax.fullarchitectureretrofithiltkotlin.utils.autoCleared
 import java.util.Locale
@@ -27,10 +32,12 @@ class WeatherLocalFragment : Fragment() {
 
     private val viewModel: WeatherViewModel by viewModels()
 
+    private lateinit var forecastAdatper : ForecastAdapter
+
     private val locationPermissionRequest =
         registerForActivityResult(ActivityResultContracts.RequestPermission()){isGranted->
             if(isGranted) viewModel.requestLocation(requireContext())
-            else binding.tvCity.text = "Location Permission denied"
+            else binding.tvCity.text = "Location Permission denied" //TODO
         }
 
     override fun onCreateView(
@@ -45,6 +52,7 @@ class WeatherLocalFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setUpRecycleView()
         checkLocationPermission()
 
         viewModel.weatherData.observe(viewLifecycleOwner) { resource ->
@@ -53,7 +61,7 @@ class WeatherLocalFragment : Fragment() {
                     hideProgressBar()
                     val weather = resource.data
                     val iconCode = weather?.weather?.get(0)?.icon
-                    val iconResult = viewModel.getWeatherIcon(iconCode)
+                    val iconResult = WeatherIconProvider.getWeatherIcon(iconCode)
 
                     with(binding) {
                         tvCity.text = weather?.name ?: "Unknown City"
@@ -63,7 +71,7 @@ class WeatherLocalFragment : Fragment() {
                         tvMaxTemperature.text = String.format(Locale.US, "Max: %.0f°C", weather?.main?.temp_max ?: 0f)
                         tvFeelsLike.text = String.format(Locale.US, "Feels like: %.0f°C", weather?.main?.feels_like ?: 0f)
                         tvWind.text = String.format(Locale.US, "Wind: %.1f m/s", weather?.wind?.speed ?: 0f)
-                        ivIconWeather.setImageResource(iconResult)
+                        ivIconWeather.setImageResource(iconResult) //todo glide
                     }
                 }
                 is Resource.Error ->{
@@ -72,8 +80,23 @@ class WeatherLocalFragment : Fragment() {
                 is Resource.Loading ->{
                     showProgressBar()
                 }
+            }
+        }
 
-                else -> {}
+        viewModel.forecastData.observe(viewLifecycleOwner){resource->
+            when(resource){
+                is Resource.Success ->{
+                    hideProgressBar()
+                    resource.data?.list?.let { forecastList->
+                        forecastAdatper.differ.submitList(forecastList)
+                    }
+                }
+                is Resource.Error ->{
+                    hideProgressBar()
+                }
+                is Resource.Loading ->{
+                    showProgressBar()
+                }
             }
         }
     }
@@ -94,5 +117,13 @@ class WeatherLocalFragment : Fragment() {
 
     private fun showProgressBar(){
         binding.paginationProgressBar.visibility = View.VISIBLE
+    }
+
+    private fun setUpRecycleView(){
+        forecastAdatper = ForecastAdapter()
+        binding.recycleView.apply {
+            adapter = forecastAdatper
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        }
     }
 }

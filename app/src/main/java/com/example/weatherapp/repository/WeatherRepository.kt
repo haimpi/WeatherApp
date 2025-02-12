@@ -14,7 +14,10 @@ class WeatherRepository @Inject constructor(
     suspend fun getWeatherData(lat: Double, lon: Double, unit: String) =
         api.getWeatherData(lat,lon,unit)
 
-    suspend fun insertWeatherData(weatherResponse: WeatherResponse) =
+    suspend fun getForecastData(lat: Double, lon: Double, unit: String) =
+        api.getForecastData(lat,lon,unit)
+
+    suspend fun upsertWeatherData(weatherResponse: WeatherResponse) =
         db.getWeatherDao().upsertWeatherData(weatherResponse)
 
     fun getSavedWeather() = db.getWeatherDao().getAllWeatherData()

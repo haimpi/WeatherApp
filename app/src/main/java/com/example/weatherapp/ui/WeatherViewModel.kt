@@ -7,16 +7,21 @@ import android.content.pm.PackageManager
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.R
 import com.example.weatherapp.models.WeatherResponse
+import com.example.weatherapp.models.forecast.ForecastResponse
 import com.example.weatherapp.repository.WeatherRepository
 import com.example.weatherapp.util.Resource
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,20 +35,43 @@ class WeatherViewModel @Inject constructor(
 
     val weatherData : MutableLiveData<Resource<WeatherResponse>> = MutableLiveData()
 
+    val forecastData : MutableLiveData<Resource<ForecastResponse>> = MutableLiveData()
+
+    private val _isLoading = MutableLiveData(true)
+    val isLoading : LiveData<Boolean> get() = _isLoading
+
+    //private val _isLoading = MutableStateFlow(true)
+    //val isLoading = _isLoading.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            delay(3000)
+            _isLoading.value = false
+        }
+    }
+
+
     fun requestLocation(context: Context) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) !=
             PackageManager.PERMISSION_GRANTED) {
             weatherData.postValue(Resource.Error("Location permission not granted"))
+            forecastData.postValue(Resource.Error("Location permission not granted"))
             return
         }
 
         fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
             .addOnSuccessListener { location ->
-                location?.let { getWeather(it.latitude, it.longitude) }
-                    ?: weatherData.postValue(Resource.Error("Location unavailable"))
+                location?.let {
+                    getWeather(it.latitude, it.longitude)
+                    getForecast(it.latitude, it.longitude)}
+                    ?: run{
+                        weatherData.postValue(Resource.Error("Location unavailable"))
+                        forecastData.postValue(Resource.Error("Location unavailable"))
+                    }
             }
             .addOnFailureListener { exception ->
                 weatherData.postValue(Resource.Error("Failed to get location: ${exception.message}"))
+                forecastData.postValue(Resource.Error("Failed to get location: ${exception.message}"))
             }
     }
 
@@ -69,19 +97,25 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
-    fun getWeatherIcon(iconCode: String?) : Int{
-        val iconPrefix = iconCode?.substring(0,2)
-       return when(iconPrefix){
-           "01" -> R.drawable.ic_sunny
-           "02" -> R.drawable.ic_sunnycloudy
-           "03" -> R.drawable.ic_cloudy
-           "04" -> R.drawable.ic_very_cloudy
-           "09" -> R.drawable.ic_rainshower
-           "10" -> R.drawable.ic_rainy
-           "11" -> R.drawable.ic_thunder
-           "13" -> R.drawable.ic_snowy
-           "50" -> R.drawable.ic_pressure
-           else -> R.drawable.ic_launcher_foreground
-       }
+    fun getForecast(lat : Double, lon : Double, unit: String = "metric"){
+        weatherData.value = Resource.Loading()
+
+        viewModelScope.launch {
+            try {
+                val response = repository.getForecastData(lat, lon, unit)
+
+                if(response.isSuccessful){
+                    response.body()?.let {
+                        forecastData.postValue(Resource.Success(it))
+                    } ?: run{
+                        forecastData.postValue(Resource.Error("No data found"))
+                    }
+                }else{
+                    forecastData.postValue(Resource.Error(response.message()))
+                }
+            }catch (e: Exception){
+                forecastData.postValue(Resource.Error("No data found"))
+            }
+        }
     }
 }
