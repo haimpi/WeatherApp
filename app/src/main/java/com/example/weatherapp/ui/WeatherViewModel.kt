@@ -118,4 +118,14 @@ class WeatherViewModel @Inject constructor(
             }
         }
     }
+
+    fun saveWeatherData(data: WeatherResponse) = viewModelScope.launch {
+        repository.upsertWeatherData(data)
+    }
+
+    fun getSavedWeatherData() = repository.getSavedWeather()
+
+    fun deleteWeatherData(data: WeatherResponse) = viewModelScope.launch {
+        repository.deleteWeather(data)
+    }
 }
