@@ -6,15 +6,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.R
 import com.example.weatherapp.models.WeatherResponse
+import com.example.weatherapp.models.CityResponse
+import com.example.weatherapp.models.FavoriteWeather
 import com.example.weatherapp.repository.WeatherRepository
 import com.example.weatherapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import com.example.weatherapp.models.CityResponse
-import javax.inject.Inject
 import android.util.Log
 import android.widget.Toast
-import com.example.weatherapp.models.FavoriteWeather
+import javax.inject.Inject
 
 @HiltViewModel
 class CitySearchViewModel @Inject constructor(
@@ -22,13 +22,17 @@ class CitySearchViewModel @Inject constructor(
     private val app: Application
 ) : AndroidViewModel(app) {
 
-    val weatherData = MutableLiveData<Resource<WeatherResponse>>()
-    val cityList = MutableLiveData<List<CityResponse>>()
-    val isRefreshing = MutableLiveData<Boolean>() // משתנה לעקוב אחרי מצב טעינת הרענון
+    //  משתנים לניהול הנתונים במסך חיפוש עיר
+    val weatherData = MutableLiveData<Resource<WeatherResponse>>() // נתוני מזג אוויר
+    val cityList = MutableLiveData<List<CityResponse>>() // רשימת הערים שמתאימות לחיפוש
+    val isRefreshing = MutableLiveData<Boolean>() // אינדיקציה האם מתבצע רענון נתונים
 
-    val selectedCityName = MutableLiveData<String?>()
-    val selectedCountryCode = MutableLiveData<String?>()
+    val selectedCityName = MutableLiveData<String?>() // שם העיר שנבחרה
+    val selectedCountryCode = MutableLiveData<String?>() // קוד המדינה שנבחרה
 
+    /**
+     *   חיפוש מזג האוויר לעיר מסוימת
+     */
     fun getWeatherByCity(city: String, country: String) {
         weatherData.value = Resource.Loading()
         selectedCityName.value = city
@@ -53,6 +57,9 @@ class CitySearchViewModel @Inject constructor(
         }
     }
 
+    /**
+     *  חיפוש רשימת ערים מתאימות לפי שם העיר שהמשתמש מקליד
+     */
     fun searchCities(query: String) {
         if (query.length < 2) return
 
@@ -60,9 +67,9 @@ class CitySearchViewModel @Inject constructor(
             try {
                 val response = repository.getCitiesFromAPI(query)
                 if (response.isSuccessful && !response.body().isNullOrEmpty()) {
-                    cityList.postValue(response.body())
+                    cityList.postValue(response.body()) // עדכון רשימת הערים בתוצאות
                 } else {
-                    cityList.postValue(emptyList())
+                    cityList.postValue(emptyList()) // אם אין תוצאות, מחזירים רשימה ריקה
                 }
             } catch (e: Exception) {
                 cityList.postValue(emptyList())
@@ -71,7 +78,9 @@ class CitySearchViewModel @Inject constructor(
         }
     }
 
-    // עדכון שם העיר בתוצאה בהתאם למה שהמשתמש חיפש
+    /**
+     *  טיפול בתגובה ממזג האוויר ועדכון הנתונים
+     */
     private fun handleWeatherResponse(response: retrofit2.Response<WeatherResponse>) {
         if (response.isSuccessful) {
             response.body()?.let { weather ->
@@ -83,6 +92,9 @@ class CitySearchViewModel @Inject constructor(
         }
     }
 
+    /**
+     *  פונקציה שממפה קוד אייקון של מזג האוויר לאייקון גרפי
+     */
     fun getWeatherIcon(iconCode: String?): Int {
         val iconPrefix = iconCode?.substring(0, 2)
         return when (iconPrefix) {
@@ -99,15 +111,19 @@ class CitySearchViewModel @Inject constructor(
         }
     }
 
-    //-------------- ניהול רשימת המועדפים -----------------------
+    // =====================  ניהול רשימת מועדפים  =====================
 
+    //  רשימת המועדפים מתוך מסד הנתונים
     val favoriteWeatherList = repository.getFavoriteWeather()
 
+    /**
+     *  הוספת עיר לרשימת המועדפים
+     */
     fun saveWeatherToFavorites(weather: WeatherResponse) {
         viewModelScope.launch {
             val existingFavorites = repository.getFavoriteWeatherList()
 
-            // בודק אם העיר והמדינה כבר קיימים ברשימת המועדפים
+            // בדיקה אם העיר כבר קיימת במועדפים
             val isAlreadySaved = existingFavorites.any {
                 it.cityName == weather.name && it.country == weather.sys.country
             }
@@ -117,7 +133,7 @@ class CitySearchViewModel @Inject constructor(
             } else {
                 val favoriteWeather = FavoriteWeather(
                     cityName = weather.name,
-                    country = weather.sys.country, // שמירת המדינה
+                    country = weather.sys.country,
                     temperature = weather.main.temp,
                     description = weather.weather[0].description,
                     minTemp = weather.main.temp_min,
@@ -134,7 +150,9 @@ class CitySearchViewModel @Inject constructor(
         }
     }
 
-
+    /**
+     *  מחיקת עיר מרשימת המועדפים
+     */
     fun removeWeatherFromFavorites(favorite: FavoriteWeather) {
         viewModelScope.launch {
             repository.deleteFavoriteWeather(favorite)
@@ -142,7 +160,7 @@ class CitySearchViewModel @Inject constructor(
     }
 
     /**
-     * פונקציה שמעדכנת את רשימת המועדפים עם הנתונים העדכניים ביותר מה-API
+     *  עדכון רשימת המועדפים עם הנתונים החדשים מה-API
      */
     fun refreshFavoriteWeather(callback: (Boolean) -> Unit) {
         isRefreshing.postValue(true) // התחלת טעינה

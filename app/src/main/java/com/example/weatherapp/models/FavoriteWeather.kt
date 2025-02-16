@@ -4,8 +4,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 @Entity(tableName = "favorite_weather", primaryKeys = ["cityName", "country"])
 data class FavoriteWeather(
-    val cityName: String,  // שם העיר
-    val country: String,    // שם המדינה - עכשיו הוא חלק מהמפתח הראשי
+    val cityName: String,
+    val country: String,
     val temperature: Double,
     val description: String,
     val minTemp: Double,
