@@ -34,6 +34,7 @@ interface WeatherAPI {
         apiKey: String = API_KEY
     ) : Response<ForecastResponse>
 
+    //--------------arthur code--------
     @GET("geo/1.0/direct")
     suspend fun getCoordinates(
         @Query("q") city: String,
@@ -41,11 +42,14 @@ interface WeatherAPI {
         @Query("appid") apiKey: String = API_KEY
     ): Response<List<CityResponse>>
 
+
     @GET("geo/1.0/direct")
     suspend fun searchCities(
         @Query("q") query: String,
-        @Query("limit") limit: Int = 5,  // להחזיר 5 תוצאות בלבד
+        @Query("limit") limit: Int = 10,
         @Query("appid") apiKey: String = API_KEY
     ): Response<List<CityResponse>>
+
+//---------------------------------
 
 }

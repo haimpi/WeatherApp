@@ -1,7 +1,6 @@
 package com.example.weatherapp.ui
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -9,12 +8,13 @@ import com.example.weatherapp.R
 import com.example.weatherapp.models.WeatherResponse
 import com.example.weatherapp.repository.WeatherRepository
 import com.example.weatherapp.util.Resource
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import retrofit2.Response
+import com.example.weatherapp.models.CityResponse
 import javax.inject.Inject
+import android.util.Log
+import android.widget.Toast
+import com.example.weatherapp.models.FavoriteWeather
 
 @HiltViewModel
 class CitySearchViewModel @Inject constructor(
@@ -22,49 +22,24 @@ class CitySearchViewModel @Inject constructor(
     private val app: Application
 ) : AndroidViewModel(app) {
 
-    val weatherData: MutableLiveData<Resource<WeatherResponse>> = MutableLiveData()
-    val countryList: MutableLiveData<List<String>> = MutableLiveData()
-    val cityList: MutableLiveData<List<String>> = MutableLiveData()
-    val selectedCountry: MutableLiveData<String> = MutableLiveData()
-    val selectedCity: MutableLiveData<String> = MutableLiveData()
+    val weatherData = MutableLiveData<Resource<WeatherResponse>>()
+    val cityList = MutableLiveData<List<CityResponse>>()
+    val isRefreshing = MutableLiveData<Boolean>() // משתנה לעקוב אחרי מצב טעינת הרענון
 
-    private var citiesMap: Map<String, List<String>> = emptyMap()
-
-    init {
-        loadCityList(app.applicationContext)
-    }
-
-    private fun loadCityList(context: Context) {
-        viewModelScope.launch {
-            try {
-                val json = context.assets.open("cities.json").bufferedReader().use { it.readText() }
-                citiesMap = Gson().fromJson(json, object : TypeToken<Map<String, List<String>>>() {}.type)
-                countryList.postValue(citiesMap.keys.toList())
-            } catch (e: Exception) {
-                countryList.postValue(emptyList())
-            }
-        }
-    }
-
-    fun getCitiesForCountry(selectedCountry: String) {
-        this.selectedCountry.postValue(selectedCountry)
-        val cities = citiesMap[selectedCountry] ?: emptyList()
-        cityList.postValue(cities)
-
-        selectedCity.value?.let { savedCity ->
-            if (savedCity in cities) selectedCity.postValue(savedCity)
-        }
-    }
+    val selectedCityName = MutableLiveData<String?>()
+    val selectedCountryCode = MutableLiveData<String?>()
 
     fun getWeatherByCity(city: String, country: String) {
-        selectedCity.postValue(city)
-        weatherData.postValue(Resource.Loading())
+        weatherData.value = Resource.Loading()
+        selectedCityName.value = city
+        selectedCountryCode.value = country
 
         viewModelScope.launch {
             try {
                 val response = repository.getCoordinates(city, country)
                 if (response.isSuccessful) {
-                    response.body()?.firstOrNull()?.let {
+                    val firstCity = response.body()?.firstOrNull()
+                    firstCity?.let {
                         val weatherResponse = repository.getWeatherData(it.lat, it.lon, "metric")
                         handleWeatherResponse(weatherResponse)
                     } ?: weatherData.postValue(Resource.Error(app.getString(R.string.error_city_not_found)))
@@ -72,28 +47,136 @@ class CitySearchViewModel @Inject constructor(
                     weatherData.postValue(Resource.Error(app.getString(R.string.error_fetch_coordinates)))
                 }
             } catch (e: Exception) {
-                weatherData.postValue(Resource.Error(app.getString(R.string.error_fetch_coordinates) + ": " + e.message))
+                weatherData.postValue(Resource.Error(app.getString(R.string.error_fetch_weather)))
+                Log.e("CitySearchViewModel", "Error fetching weather", e)
             }
         }
     }
 
-    private fun handleWeatherResponse(response: Response<WeatherResponse>) {
-        if (response.isSuccessful) {
-            response.body()?.let {
-                weatherData.postValue(Resource.Success(it))
-            } ?: weatherData.postValue(Resource.Error(app.getString(R.string.error_no_data)))
-        } else {
-            weatherData.postValue(Resource.Error(app.getString(R.string.error_fetch_weather) + ": " + response.message()))
+    fun searchCities(query: String) {
+        if (query.length < 2) return
+
+        viewModelScope.launch {
+            try {
+                val response = repository.getCitiesFromAPI(query)
+                if (response.isSuccessful && !response.body().isNullOrEmpty()) {
+                    cityList.postValue(response.body())
+                } else {
+                    cityList.postValue(emptyList())
+                }
+            } catch (e: Exception) {
+                cityList.postValue(emptyList())
+                Log.e("CitySearchViewModel", "Error searching cities", e)
+            }
         }
     }
 
-    fun refreshData(context: Context) {
-        val currentCountry = selectedCountry.value
-        val currentCity = selectedCity.value
-        loadCityList(context)
-        selectedCountry.postValue(currentCountry ?: citiesMap.keys.firstOrNull())
-        selectedCity.postValue(currentCity ?: citiesMap[selectedCountry.value]?.firstOrNull())
+    // עדכון שם העיר בתוצאה בהתאם למה שהמשתמש חיפש
+    private fun handleWeatherResponse(response: retrofit2.Response<WeatherResponse>) {
+        if (response.isSuccessful) {
+            response.body()?.let { weather ->
+                val updatedWeather = weather.copy(name = selectedCityName.value ?: weather.name)
+                weatherData.postValue(Resource.Success(updatedWeather))
+            } ?: weatherData.postValue(Resource.Error(app.getString(R.string.error_no_data)))
+        } else {
+            weatherData.postValue(Resource.Error(app.getString(R.string.error_fetch_weather)))
+        }
+    }
+
+    fun getWeatherIcon(iconCode: String?): Int {
+        val iconPrefix = iconCode?.substring(0, 2)
+        return when (iconPrefix) {
+            "01" -> R.drawable.ic_sunny
+            "02" -> R.drawable.ic_sunnycloudy
+            "03" -> R.drawable.ic_cloudy
+            "04" -> R.drawable.ic_very_cloudy
+            "09" -> R.drawable.ic_rainshower
+            "10" -> R.drawable.ic_rainy
+            "11" -> R.drawable.ic_thunder
+            "13" -> R.drawable.ic_snowy
+            "50" -> R.drawable.ic_pressure
+            else -> R.drawable.ic_launcher_foreground
+        }
+    }
+
+    //-------------- ניהול רשימת המועדפים -----------------------
+
+    val favoriteWeatherList = repository.getFavoriteWeather()
+
+    fun saveWeatherToFavorites(weather: WeatherResponse) {
+        viewModelScope.launch {
+            val existingFavorites = repository.getFavoriteWeatherList()
+
+            // בודק אם העיר והמדינה כבר קיימים ברשימת המועדפים
+            val isAlreadySaved = existingFavorites.any {
+                it.cityName == weather.name && it.country == weather.sys.country
+            }
+
+            if (isAlreadySaved) {
+                Toast.makeText(app, app.getString(R.string.favorite_already_exists, weather.name), Toast.LENGTH_SHORT).show()
+            } else {
+                val favoriteWeather = FavoriteWeather(
+                    cityName = weather.name,
+                    country = weather.sys.country, // שמירת המדינה
+                    temperature = weather.main.temp,
+                    description = weather.weather[0].description,
+                    minTemp = weather.main.temp_min,
+                    maxTemp = weather.main.temp_max,
+                    feelsLike = weather.main.feels_like,
+                    windSpeed = weather.wind.speed,
+                    iconCode = weather.weather[0].icon,
+                    lat = weather.coord.lat,
+                    lon = weather.coord.lon
+                )
+                repository.insertFavoriteWeather(favoriteWeather)
+                Toast.makeText(app, app.getString(R.string.favorite_added, weather.name), Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+
+    fun removeWeatherFromFavorites(favorite: FavoriteWeather) {
+        viewModelScope.launch {
+            repository.deleteFavoriteWeather(favorite)
+        }
+    }
+
+    /**
+     * פונקציה שמעדכנת את רשימת המועדפים עם הנתונים העדכניים ביותר מה-API
+     */
+    fun refreshFavoriteWeather(callback: (Boolean) -> Unit) {
+        isRefreshing.postValue(true) // התחלת טעינה
+
+        viewModelScope.launch {
+            try {
+                val updatedFavorites = favoriteWeatherList.value?.map { favorite ->
+                    val response = repository.getWeatherData(favorite.lat, favorite.lon, "metric")
+
+                    if (response.isSuccessful) {
+                        response.body()?.let { weather ->
+                            favorite.copy(
+                                temperature = weather.main.temp,
+                                description = weather.weather[0].description,
+                                minTemp = weather.main.temp_min,
+                                maxTemp = weather.main.temp_max,
+                                feelsLike = weather.main.feels_like,
+                                windSpeed = weather.wind.speed,
+                                iconCode = weather.weather[0].icon
+                            )
+                        } ?: favorite
+                    } else {
+                        favorite
+                    }
+                } ?: emptyList()
+
+                repository.updateFavoriteWeather(updatedFavorites)
+                isRefreshing.postValue(false)
+                callback(true)
+            } catch (e: Exception) {
+                isRefreshing.postValue(false)
+                callback(false)
+            }
+        }
     }
 }
-
 

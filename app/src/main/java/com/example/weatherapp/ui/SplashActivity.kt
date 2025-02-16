@@ -1,3 +1,4 @@
+/*
 package com.example.weatherapp.ui
 
 import android.content.Intent
@@ -33,3 +34,4 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 }
+*/

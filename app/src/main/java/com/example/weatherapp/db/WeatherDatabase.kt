@@ -5,33 +5,34 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.weatherapp.models.Weather
+import com.example.weatherapp.models.FavoriteWeather
 import com.example.weatherapp.models.WeatherResponse
 
 @Database(
-    entities = [WeatherResponse::class],
-    version = 1,
+    entities = [WeatherResponse::class, FavoriteWeather::class],
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
-abstract class WeatherDatabase : RoomDatabase(){
+abstract class WeatherDatabase : RoomDatabase() {
 
-    abstract fun getWeatherDao() : WeatherDao
+    abstract fun getWeatherDao(): WeatherDao
+    abstract fun getFavoriteDao(): FavoriteWeatherDao
 
-    companion object{
-
+    companion object {
         @Volatile
-        private var instance : WeatherDatabase? = null
+        private var instance: WeatherDatabase? = null
 
-        fun getDataBase(context: Context) : WeatherDatabase =
-            instance ?: synchronized(this){
-                Room.databaseBuilder(context.applicationContext,
+        fun getDataBase(context: Context): WeatherDatabase =
+            instance ?: synchronized(this) {
+                Room.databaseBuilder(
+                    context.applicationContext,
                     WeatherDatabase::class.java,
-                    "weather_db")
+                    "weather_db"
+                )
                     .fallbackToDestructiveMigration()
                     .build()
                     .also { instance = it }
             }
     }
-
 }

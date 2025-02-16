@@ -6,7 +6,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 class Converters {
-
     private val gson = Gson()
 
     @TypeConverter
@@ -40,12 +39,12 @@ class Converters {
     }
 
     @TypeConverter
-    fun fromWeather(weather: List<Weather>?): String? {
+    fun fromWeatherList(weather: List<Weather>?): String? {
         return gson.toJson(weather)
     }
 
     @TypeConverter
-    fun toWeather(data: String?): List<Weather>? {
+    fun toWeatherList(data: String?): List<Weather>? {
         return gson.fromJson(data, object : TypeToken<List<Weather>?>() {}.type)
     }
 
