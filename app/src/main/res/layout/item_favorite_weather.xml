@@ -14,36 +14,64 @@
         android:padding="16dp"
         android:gravity="center_vertical">
 
-        <!-- שם העיר + המדינה -->
-        <TextView
-            android:id="@+id/tvCityAndCountry"
-            android:layout_width="wrap_content"
+        <!-- שם העיר + המדינה בצד ימין | אייקון מזג האוויר בצד שמאל -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="City Name, Country"
-            android:textSize="18sp"
-            android:textColor="@color/black"
-            android:textStyle="bold"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- אייקון מזג האוויר בצד שמאל -->
 
 
-        <!-- טמפרטורה -->
+            <TextView
+                android:id="@+id/tvCityAndCountry"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="@string/label_city"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:gravity="start"
+                android:textDirection="locale"/>
+
+
+
+            <!-- שם העיר והמדינה בצד ימין -->
+            <ImageView
+                android:id="@+id/ivWeatherIcon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="end"
+                android:layout_weight="1"
+                android:contentDescription="@string/weather_icon_desc"
+                android:src="@drawable/ic_sunny" />
+
+
+        </LinearLayout>
+
+        <!-- טמפרטורה ראשית -->
         <TextView
             android:id="@+id/tvTemperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="25°C"
-            android:textSize="18sp"
+            android:text="@string/temperature_n_a"
+            android:textSize="30sp"
             android:textColor="@color/black"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:gravity="center"/>
 
         <!-- תיאור מזג האוויר -->
         <TextView
             android:id="@+id/tvDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Partly Cloudy"
+            android:text="@string/weather_description_n_a"
             android:textSize="16sp"
             android:textColor="@color/black"
-            android:textStyle="italic"/>
+            android:textStyle="italic"
+            android:gravity="center"/>
 
         <!-- קו מפריד -->
         <View
@@ -52,7 +80,52 @@
             android:background="@color/bright_blue"
             android:layout_marginVertical="8dp"/>
 
-        <!-- טמפרטורה מינימלית ומקסימלית -->
+        <!-- מידע נוסף (מינימום, מקסימום, מרגיש כמו) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <TextView
+                android:id="@+id/tvMinTemperature"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/label_temp"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/tvFeelsLike"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/label_feels_like"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/tvMaxTemperature"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/label_temp"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <!-- קו מפריד -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bright_blue"
+            android:layout_marginVertical="8dp"/>
+
+        <!-- זריחה ושקיעה -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -60,51 +133,67 @@
             android:weightSum="2">
 
             <TextView
-                android:id="@+id/tvMinTemperature"
+                android:id="@+id/tvSunrise"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Min: 15°C"
+                android:text="@string/label_sunrise"
                 android:textSize="14sp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:layout_weight="1"
+                android:gravity="center"/>
 
             <TextView
-                android:id="@+id/tvMaxTemperature"
+                android:id="@+id/tvSunset"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/label_sunset"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:layout_weight="1"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <!-- קו מפריד נוסף -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bright_blue"
+            android:layout_marginVertical="8dp"/>
+
+        <!-- לחות + מהירות הרוח -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/tvHumidity"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Max: 30°C"
+                android:text="@string/label_humidity"
                 android:textSize="14sp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/tvWindSpeed"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/label_wind"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:gravity="center"/>
         </LinearLayout>
 
-        <!-- מרגיש כמו -->
-        <TextView
-            android:id="@+id/tvFeelsLike"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Feels like: 27°C"
-            android:textSize="14sp"
-            android:textColor="@color/black"/>
-
-        <!-- מהירות הרוח -->
-        <TextView
-            android:id="@+id/tvWindSpeed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Wind: 3.5 m/s"
-            android:textSize="14sp"
-            android:textColor="@color/black"/>
-
-        <!-- תמונת מזג אוויר -->
-        <ImageView
-            android:id="@+id/ivWeatherIcon"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_sunny"
-            android:layout_gravity="center_horizontal"
-            android:contentDescription="@string/weather_icon_desc"
-            android:layout_marginTop="8dp"/>
+        <!-- קו מפריד נוסף -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bright_blue"
+            android:layout_marginVertical="8dp"/>
 
         <!-- אייקון מחיקה -->
         <ImageView

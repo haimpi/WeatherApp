@@ -6,13 +6,18 @@ import androidx.room.PrimaryKey
 data class FavoriteWeather(
     val cityName: String,
     val country: String,
-    val temperature: Double,
-    val description: String,
-    val minTemp: Double,
-    val maxTemp: Double,
-    val feelsLike: Double,
-    val windSpeed: Double,
-    val iconCode: String,
+    val temperature: Double?,
+    val description: String?,
+    val minTemp: Double?,
+    val maxTemp: Double?,
+    val feelsLike: Double?,
+    val windSpeed: Double?,
+    val humidity: Int?,
+    val sunrise: Int?,
+    val sunset: Int?,
+    val timezone: Int?,
+    val iconCode: String?,
     val lat: Double,
     val lon: Double
 )
+

@@ -121,34 +121,44 @@ class CitySearchViewModel @Inject constructor(
      */
     fun saveWeatherToFavorites(weather: WeatherResponse) {
         viewModelScope.launch {
-            val existingFavorites = repository.getFavoriteWeatherList()
+            try {
+                val existingFavorites = repository.getFavoriteWeatherList()
 
-            // בדיקה אם העיר כבר קיימת במועדפים
-            val isAlreadySaved = existingFavorites.any {
-                it.cityName == weather.name && it.country == weather.sys.country
-            }
+                // בדיקה אם העיר כבר קיימת במועדפים
+                val isAlreadySaved = existingFavorites.any {
+                    it.cityName == weather.name && it.country == weather.sys.country
+                }
 
-            if (isAlreadySaved) {
-                Toast.makeText(app, app.getString(R.string.favorite_already_exists, weather.name), Toast.LENGTH_SHORT).show()
-            } else {
-                val favoriteWeather = FavoriteWeather(
-                    cityName = weather.name,
-                    country = weather.sys.country,
-                    temperature = weather.main.temp,
-                    description = weather.weather[0].description,
-                    minTemp = weather.main.temp_min,
-                    maxTemp = weather.main.temp_max,
-                    feelsLike = weather.main.feels_like,
-                    windSpeed = weather.wind.speed,
-                    iconCode = weather.weather[0].icon,
-                    lat = weather.coord.lat,
-                    lon = weather.coord.lon
-                )
-                repository.insertFavoriteWeather(favoriteWeather)
-                Toast.makeText(app, app.getString(R.string.favorite_added, weather.name), Toast.LENGTH_SHORT).show()
+                if (isAlreadySaved) {
+                    Toast.makeText(app, app.getString(R.string.favorite_already_exists, weather.name), Toast.LENGTH_SHORT).show()
+                } else {
+                    val favoriteWeather = FavoriteWeather(
+                        cityName = weather.name,
+                        country = weather.sys.country,
+                        temperature = weather.main.temp,
+                        description = weather.weather[0].description,
+                        minTemp = weather.main.temp_min,
+                        maxTemp = weather.main.temp_max,
+                        feelsLike = weather.main.feels_like,
+                        windSpeed = weather.wind.speed,
+                        humidity = weather.main.humidity,
+                        sunrise = weather.sys.sunrise,
+                        sunset = weather.sys.sunset,
+                        timezone = weather.timezone,
+                        iconCode = weather.weather[0].icon,
+                        lat = weather.coord.lat,
+                        lon = weather.coord.lon
+                    )
+                    repository.insertFavoriteWeather(favoriteWeather)
+                    Toast.makeText(app, app.getString(R.string.favorite_added, weather.name), Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(app, app.getString(R.string.error_fetch_weather), Toast.LENGTH_SHORT).show()
+                Log.e("CitySearchViewModel", "Error saving favorite weather", e)
             }
         }
     }
+
 
     /**
      *  מחיקת עיר מרשימת המועדפים
@@ -179,7 +189,10 @@ class CitySearchViewModel @Inject constructor(
                                 maxTemp = weather.main.temp_max,
                                 feelsLike = weather.main.feels_like,
                                 windSpeed = weather.wind.speed,
-                                iconCode = weather.weather[0].icon
+                                humidity = weather.main.humidity,
+                                sunrise = weather.sys.sunrise,
+                                sunset = weather.sys.sunset,
+                                timezone = weather.timezone      
                             )
                         } ?: favorite
                     } else {

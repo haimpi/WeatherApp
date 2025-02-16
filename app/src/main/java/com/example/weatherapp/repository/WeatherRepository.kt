@@ -1,6 +1,5 @@
 package com.example.weatherapp.repository
 
-import com.example.weatherapp.api.RetrofitInstance
 import com.example.weatherapp.api.WeatherAPI
 import com.example.weatherapp.db.WeatherDatabase
 import com.example.weatherapp.models.CityResponse
@@ -43,26 +42,10 @@ class WeatherRepository @Inject constructor(
 
     suspend fun updateFavoriteWeather(favorites: List<FavoriteWeather>) {
         favorites.forEach { favorite ->
-            val response = getWeatherData(favorite.lat, favorite.lon, "metric")
-            if (response.isSuccessful) {
-                response.body()?.let { weather ->
-                    val updatedWeather = favorite.copy(  // מעדכן את הפריט הקיים ולא יוצר חדש
-                        temperature = weather.main.temp,
-                        description = weather.weather[0].description,
-                        minTemp = weather.main.temp_min,
-                        maxTemp = weather.main.temp_max,
-                        feelsLike = weather.main.feels_like,
-                        windSpeed = weather.wind.speed,
-                        iconCode = weather.weather[0].icon
-                    )
-                    insertFavoriteWeather(updatedWeather)
-                }
-            }
+            db.getFavoriteDao().insertFavorite(favorite) // שומר את המידע המעודכן
         }
     }
     //--------------------------------------------
-
-
 
     suspend fun getWeatherData(lat: Double, lon: Double, unit: String) =
         api.getWeatherData(lat,lon,unit)
