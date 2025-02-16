@@ -1,37 +1,41 @@
-/*
 package com.example.weatherapp.ui
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.airbnb.lottie.LottieAnimationView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.ActivitySplashBinding
-import com.example.weatherapp.databinding.ActivityWeatherBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
 
     private val viewModel: WeatherViewModel by viewModels()
+    private lateinit var binding: ActivitySplashBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivitySplashBinding.inflate(layoutInflater)
-
+        binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val animationView = findViewById<LottieAnimationView>(R.id.splash_animation)
-        animationView.setAnimation(R.raw.splash)
-        animationView.playAnimation()
+        binding.splashAnimation.setAnimation(R.raw.splash)
+        binding.splashAnimation.playAnimation()
 
-        viewModel.isLoading.observe(this) { isLoading ->
-            if (!isLoading) {
-                startActivity(Intent(this, WeatherActivity::class.java))
-                finish()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.isLoading.collect { isLoading ->
+                    if (!isLoading) {
+                        binding.splashAnimation.cancelAnimation() // Stop animation before moving
+                        startActivity(Intent(this@SplashActivity, WeatherActivity::class.java))
+                        finish()
+                    }
+                }
             }
         }
     }
 }
-*/

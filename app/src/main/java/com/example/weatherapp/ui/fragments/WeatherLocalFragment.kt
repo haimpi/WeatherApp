@@ -102,11 +102,14 @@ class WeatherLocalFragment : Fragment() {
     }
 
     private fun checkLocationPermission() {
-        if(ContextCompat.checkSelfPermission(
-            requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED){
-            viewModel.requestLocation(requireContext())
-        }else{
+        if (ContextCompat.checkSelfPermission(
+                requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            if (viewModel.weatherData.value == null) { // Prevent duplicate requests
+                viewModel.requestLocation(requireContext())
+            }
+        } else {
             locationPermissionRequest.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
     }

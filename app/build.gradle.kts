@@ -86,9 +86,6 @@ dependencies {
     //gps
     implementation("com.google.android.gms:play-services-location:21.3.0")
 
-    //splashscreen
-    implementation("androidx.core:core-splashscreen:1.0.0")
-
     //splash
     implementation("com.airbnb.android:lottie:6.6.2")
 
