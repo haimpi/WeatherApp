@@ -7,6 +7,7 @@ import com.example.weatherapp.R
 import com.example.weatherapp.databinding.ItemFavoriteWeatherBinding
 import com.example.weatherapp.models.FavoriteWeather
 import com.example.weatherapp.ui.CitySearchViewModel
+import com.example.weatherapp.util.WeatherIconProvider
 import com.example.weatherapp.util.convertUnixToTime
 import java.util.Locale
 
@@ -31,8 +32,8 @@ class FavoriteWeatherAdapter(
                 tvCityAndCountry.text = "${favorite.cityName}, $countryName"
                 tvTemperature.text = itemView.context.getString(R.string.label_temp, favorite.temperature ?: "--")
                 tvDescription.text = itemView.context.getString(R.string.label_weather_description, favorite.description ?: "--")
-                tvMinTemperature.text = itemView.context.getString(R.string.label_temp, favorite.minTemp ?: "--")
-                tvMaxTemperature.text = itemView.context.getString(R.string.label_temp, favorite.maxTemp ?: "--")
+                tvMinTemperature.text = itemView.context.getString(R.string.label_temp_min, favorite.minTemp ?: "--")
+                tvMaxTemperature.text = itemView.context.getString(R.string.label_temp_max, favorite.maxTemp ?: "--")
                 tvFeelsLike.text = itemView.context.getString(R.string.label_feels_like, favorite.feelsLike ?: "--")
                 tvHumidity.text = itemView.context.getString(R.string.label_humidity, favorite.humidity ?: "--")
                 tvWindSpeed.text = itemView.context.getString(R.string.label_wind, favorite.windSpeed ?: "--")
@@ -40,8 +41,9 @@ class FavoriteWeatherAdapter(
                 tvSunset.text = itemView.context.getString(R.string.label_sunset, convertUnixToTime(favorite.sunset, favorite.timezone))
 
                 // שינוי האייקון של מזג האוויר
-                val iconRes = viewModel.getWeatherIcon(favorite.iconCode)
+                val iconRes = WeatherIconProvider.getWeatherIcon(favorite.iconCode)
                 ivWeatherIcon.setImageResource(iconRes)
+
 
                 // לחיצה על כפתור מחיקה
                 ivDeleteFavorite.setOnClickListener {

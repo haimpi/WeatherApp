@@ -13,7 +13,8 @@
     <string name="label_sunset">שקיעה: %s</string>
     <string name="label_wind">רוח: %s קמ"ש</string>
     <string name="label_weather_description">%s</string>
-
+    <string name="label_temp_min">מינימלית: %s°C</string>
+    <string name="label_temp_max">מקסימלית: %s°C</string>
     <string name="enter_city_name">הזן שם עיר</string>
     <string name="search">חפש</string>
     <string name="enter_country_code">הזן מדינה</string>
@@ -41,5 +42,7 @@
     <string name="please_enter_city_country">אנא הזן עיר ומדינה</string>
     <string name="favorite_already_exists">%1$s כבר קיימת במועדפים!</string>
     <string name="favorite_added">%1$s נוספה למועדפים!</string>
+    <string name="favorite_list_title">רשימת מועדפים</string>
+    <string name="Refresh">רענן</string>
 
 </resources>
