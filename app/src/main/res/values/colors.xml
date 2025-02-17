@@ -8,4 +8,17 @@
     <color name="earth_brown">#8B4513</color> <!-- קווי הפרדה -->
     <color name="bright_blue">#1E90FF</color> <!-- כפתורים או אייקונים (אם קיים) -->
 
+
+    <!-- לגרדיאנט -->
+    <color name="sunny_end">#FFDC80</color>
+    <color name="cloudy_sun_end">#FFC371</color>
+    <color name="cloudy_end">#C4C4C4</color>
+    <color name="very_cloudy_end">#A0A0A0</color>
+    <color name="rainshower_end">#8EC5FC</color>
+    <color name="rainy_end">#5C9CEC</color>
+    <color name="thunder_end">#616161</color>
+    <color name="snowy_end">#AEEEEE</color>
+    <color name="mist_end">#D3D3D3</color>
+    <color name="default_end">#B0C4DE</color>
+
 </resources>

@@ -40,17 +40,34 @@ class FavoriteWeatherAdapter(
                 tvSunrise.text = itemView.context.getString(R.string.label_sunrise, convertUnixToTime(favorite.sunrise, favorite.timezone))
                 tvSunset.text = itemView.context.getString(R.string.label_sunset, convertUnixToTime(favorite.sunset, favorite.timezone))
 
-                // שינוי האייקון של מזג האוויר
+                // ✅ עדכון האייקון
                 val iconRes = WeatherIconProvider.getWeatherIcon(favorite.iconCode)
                 ivWeatherIcon.setImageResource(iconRes)
 
+                //  שינוי הרקע של כל כרטיסייה בנפרד
+                val (startColor, endColor) = WeatherIconProvider.getWeatherCardGradient(favorite.iconCode)
+                val gradientDrawable = android.graphics.drawable.GradientDrawable(
+                    android.graphics.drawable.GradientDrawable.Orientation.BL_TR, // זווית 45°
+                    intArrayOf(
+                        itemView.context.getColor(startColor),
+                        itemView.context.getColor(endColor)
+                    )
+                )
+                gradientDrawable.cornerRadius = 25f
+                linearLayoutContainer.background = gradientDrawable
+                    //----------------------------------------------------------------------------
 
-                // לחיצה על כפתור מחיקה
+
+
+
+                //  מחיקת עיר
                 ivDeleteFavorite.setOnClickListener {
                     onDeleteClick(favorite)
                 }
             }
         }
+
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteViewHolder {

@@ -175,7 +175,8 @@ class CitySearchViewModel @Inject constructor(
                                 humidity = weather.main.humidity,
                                 sunrise = weather.sys.sunrise,
                                 sunset = weather.sys.sunset,
-                                timezone = weather.timezone      
+                                timezone = weather.timezone,
+                                iconCode = weather.weather[0].icon // ✅ הוספת עדכון לאייקון
                             )
                         } ?: favorite
                     } else {
@@ -192,5 +193,6 @@ class CitySearchViewModel @Inject constructor(
             }
         }
     }
+
 }
 
