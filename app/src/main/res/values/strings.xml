@@ -46,4 +46,30 @@
     <string name="Refresh">Refresh</string>
 
 
+    <!-- Dashboard -->
+    <string name="search_city">Search City</string>
+    <string name="weather_dashboard">Main Menu</string>
+    <string name="location_weather">Location Weather</string>
+    <string name="favorite">Favorite</string>
+    <string name="settings">Settings</string>
+    <!-- headers-->
+    <string name="local_weather">Local Weather</string>
+    <string name="city_search">City Search</string>
+    <string name="home">home</string>
+
+    <!-- Haim stuff-->
+    <string name="today">Today</string>
+    <string name="city">City</string>
+    <string name="temperature">Temperature</string>
+    <string name="description">Description</string>
+    <string name="max_c">Max: --°C</string>
+    <string name="min_c">Min: --°C</string>
+    <string name="feels_like_c">Feels like: --°C</string>
+    <string name="wind_km_h">Wind: -- km/h</string>
+    <string name="day">Day</string>
+    <string name="hour">Hour</string>
+    <string name="temp">Temp</string>
+    <!-- Haim stuff-->
+
+
 </resources>

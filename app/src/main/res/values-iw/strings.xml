@@ -45,4 +45,32 @@
     <string name="favorite_list_title">רשימת מועדפים</string>
     <string name="Refresh">רענן</string>
 
+    <!-- Dashboard -->
+    <string name="search_city">חיפוש עיר</string>
+    <string name="weather_dashboard">תפריט ראשי</string>
+    <string name="location_weather">מזג אוויר מקומי</string>
+    <string name="favorite">מועדפים</string>
+    <string name="settings">הגדרות</string>
+
+    <!-- headers-->
+    <string name="local_weather">מזג אוויר מקומי</string>
+    <string name="city_search">חיפוש עיר</string>
+    <string name="home">בית</string>
+
+    <!-- Haim stuff-->
+    <string name="today">היום</string>
+    <string name="city">עיר</string>
+    <string name="temperature">טמפרטורה</string>
+    <string name="description">תיאור</string>
+    <string name="max_c">מקסימום: --°C</string>
+    <string name="min_c">מינימום: --°C</string>
+    <string name="feels_like_c">מרגיש כמו: --°C</string>
+    <string name="wind_km_h">רוח: -- קמ"ש</string>
+    <string name="day">יום</string>
+    <string name="hour">שעה</string>
+    <string name="temp">טמ"פ</string>
+    <!-- Haim stuff-->
+
+
+
 </resources>

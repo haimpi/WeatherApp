@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -18,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WeatherApp">
 
-        <!-- SplashActivity (now the launcher activity) -->
+        <!-- ✅ SplashActivity הוא כעת מסך הפתיחה -->
         <activity
             android:name=".ui.SplashActivity"
             android:exported="true"
@@ -29,12 +28,14 @@
             </intent-filter>
         </activity>
 
-        <!-- WeatherActivity (opened after Splash) -->
+        <!-- ❌ WeatherActivity אינו המסך הראשי יותר -->
         <activity
             android:name=".ui.WeatherActivity"
             android:exported="true"
-            android:theme="@style/Theme.WeatherApp" />
+            android:theme="@style/Theme.WeatherApp"/>
 
     </application>
 
 </manifest>
+
+

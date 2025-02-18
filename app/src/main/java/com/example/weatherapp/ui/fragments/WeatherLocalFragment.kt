@@ -22,6 +22,8 @@ import com.example.weatherapp.ui.WeatherViewModel
 import com.example.weatherapp.util.Resource
 import com.example.weatherapp.util.WeatherIconProvider
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.navigation.fragment.findNavController
+import com.example.weatherapp.Animations.Click_button_animation
 import il.co.syntax.fullarchitectureretrofithiltkotlin.utils.autoCleared
 import java.util.Locale
 
@@ -81,6 +83,14 @@ class WeatherLocalFragment : Fragment() {
                     showProgressBar()
                 }
             }
+
+
+            binding.btnHome.setOnClickListener {
+                Click_button_animation.scaleView(it) {
+                    findNavController().navigate(R.id.action_weatherLocalFragment_to_mainDashboardFragment)
+                }
+            }
+
         }
 
         viewModel.forecastData.observe(viewLifecycleOwner){resource->

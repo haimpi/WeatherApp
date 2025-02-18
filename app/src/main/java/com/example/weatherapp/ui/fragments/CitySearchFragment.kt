@@ -1,14 +1,17 @@
 package com.example.weatherapp.ui.fragments
 
+import androidx.navigation.fragment.findNavController
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.weatherapp.Animations.Click_button_animation
 import com.example.weatherapp.R
 import com.example.weatherapp.adapters.CityAutoCompleteAdapter
 import com.example.weatherapp.databinding.FragmentCitySearchBinding
@@ -53,6 +56,17 @@ class CitySearchFragment : Fragment() {
         setupSearchListener()  // מאזין לחיפוש עיר
         setupFavoriteButton()  // מאזין לכפתור הוספה למועדפים
         setupSearchButton()    // מאזין לכפתור החיפוש
+
+
+
+
+        binding.btnHome.setOnClickListener {
+            Click_button_animation.scaleView(it) {
+                findNavController().navigate(R.id.action_citySearchFragment_to_mainDashboardFragment)
+            }
+        }
+
+
     }
 
     //  אתחול המתאם להשלמות אוטומטיות
@@ -159,12 +173,17 @@ class CitySearchFragment : Fragment() {
 
     //  האזנה ללחיצה על כפתור הוספה למועדפים
     private fun setupFavoriteButton() {
-        binding.ivHeartIcon.setOnClickListener {
-            val weather = viewModel.weatherData.value?.data
-            if (weather != null) {
-                viewModel.saveWeatherToFavorites(weather)
+        binding.ivHeartIcon.setOnClickListener { view ->
+            Click_button_animation.scaleView(view) {
+                val weather = viewModel.weatherData.value?.data
+                if (weather != null) {
+                    viewModel.saveWeatherToFavorites(weather)
+                }
             }
         }
     }
+
+
+
 }
 

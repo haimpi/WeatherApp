@@ -3,6 +3,7 @@ package com.example.weatherapp.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.weatherapp.Animations.Click_button_animation
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.ItemFavoriteWeatherBinding
 import com.example.weatherapp.models.FavoriteWeather
@@ -44,7 +45,8 @@ class FavoriteWeatherAdapter(
                 val iconRes = WeatherIconProvider.getWeatherIcon(favorite.iconCode)
                 ivWeatherIcon.setImageResource(iconRes)
 
-                //  שינוי הרקע של כל כרטיסייה בנפרד
+                //  שינוי הרקע של כל כרטיסייה בנפרד------------------------
+
                 val (startColor, endColor) = WeatherIconProvider.getWeatherCardGradient(favorite.iconCode)
                 val gradientDrawable = android.graphics.drawable.GradientDrawable(
                     android.graphics.drawable.GradientDrawable.Orientation.BL_TR, // זווית 45°
@@ -54,16 +56,20 @@ class FavoriteWeatherAdapter(
                     )
                 )
                 gradientDrawable.cornerRadius = 25f
-                linearLayoutContainer.background = gradientDrawable
+                XmlWeatherListCard.background = gradientDrawable
+
                     //----------------------------------------------------------------------------
 
 
 
 
-                //  מחיקת עיר
-                ivDeleteFavorite.setOnClickListener {
-                    onDeleteClick(favorite)
+                // מחיקת עיר עם אנימציה
+                ivDeleteFavorite.setOnClickListener { view ->
+                    Click_button_animation.scaleView(view) {
+                        onDeleteClick(favorite)
+                    }
                 }
+
             }
         }
 

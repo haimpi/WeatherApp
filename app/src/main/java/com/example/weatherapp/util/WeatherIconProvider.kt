@@ -20,9 +20,6 @@ object WeatherIconProvider {
     }
 
 
-
-
-
     fun getWeatherCardGradient(iconCode: String?): Pair<Int, Int> {
         val iconPrefix = iconCode?.substring(0,2)
         return when(iconPrefix) {

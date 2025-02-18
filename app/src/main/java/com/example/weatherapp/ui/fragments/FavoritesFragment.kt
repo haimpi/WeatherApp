@@ -12,6 +12,9 @@ import com.example.weatherapp.databinding.FragmentFavoritesBinding
 import com.example.weatherapp.ui.CitySearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import il.co.syntax.fullarchitectureretrofithiltkotlin.utils.autoCleared
+import androidx.navigation.fragment.findNavController
+import com.example.weatherapp.Animations.Click_button_animation
+import com.example.weatherapp.R
 
 @AndroidEntryPoint
 class FavoritesFragment : Fragment() {
@@ -43,6 +46,12 @@ class FavoritesFragment : Fragment() {
 
         binding.btnRefreshFavorites.setOnClickListener {
             refreshFavoriteWeather()  // רענון רשימת המועדפים בלחיצה
+        }
+
+        binding.btnHome.setOnClickListener {
+            Click_button_animation.scaleView(it) {
+                findNavController().navigate(R.id.action_favoritesFragment_to_mainDashboardFragment)
+            }
         }
     }
 
