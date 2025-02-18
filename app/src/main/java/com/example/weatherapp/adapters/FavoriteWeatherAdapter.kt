@@ -7,6 +7,7 @@ import com.example.weatherapp.R
 import com.example.weatherapp.databinding.ItemFavoriteWeatherBinding
 import com.example.weatherapp.models.FavoriteWeather
 import com.example.weatherapp.ui.CitySearchViewModel
+import com.example.weatherapp.util.WeatherIconProvider
 import com.example.weatherapp.util.convertUnixToTime
 import java.util.Locale
 
@@ -31,24 +32,42 @@ class FavoriteWeatherAdapter(
                 tvCityAndCountry.text = "${favorite.cityName}, $countryName"
                 tvTemperature.text = itemView.context.getString(R.string.label_temp, favorite.temperature ?: "--")
                 tvDescription.text = itemView.context.getString(R.string.label_weather_description, favorite.description ?: "--")
-                tvMinTemperature.text = itemView.context.getString(R.string.label_temp, favorite.minTemp ?: "--")
-                tvMaxTemperature.text = itemView.context.getString(R.string.label_temp, favorite.maxTemp ?: "--")
+                tvMinTemperature.text = itemView.context.getString(R.string.label_temp_min, favorite.minTemp ?: "--")
+                tvMaxTemperature.text = itemView.context.getString(R.string.label_temp_max, favorite.maxTemp ?: "--")
                 tvFeelsLike.text = itemView.context.getString(R.string.label_feels_like, favorite.feelsLike ?: "--")
                 tvHumidity.text = itemView.context.getString(R.string.label_humidity, favorite.humidity ?: "--")
                 tvWindSpeed.text = itemView.context.getString(R.string.label_wind, favorite.windSpeed ?: "--")
                 tvSunrise.text = itemView.context.getString(R.string.label_sunrise, convertUnixToTime(favorite.sunrise, favorite.timezone))
                 tvSunset.text = itemView.context.getString(R.string.label_sunset, convertUnixToTime(favorite.sunset, favorite.timezone))
 
-                // שינוי האייקון של מזג האוויר
-                val iconRes = viewModel.getWeatherIcon(favorite.iconCode)
+                // ✅ עדכון האייקון
+                val iconRes = WeatherIconProvider.getWeatherIcon(favorite.iconCode)
                 ivWeatherIcon.setImageResource(iconRes)
 
-                // לחיצה על כפתור מחיקה
+                //  שינוי הרקע של כל כרטיסייה בנפרד
+                val (startColor, endColor) = WeatherIconProvider.getWeatherCardGradient(favorite.iconCode)
+                val gradientDrawable = android.graphics.drawable.GradientDrawable(
+                    android.graphics.drawable.GradientDrawable.Orientation.BL_TR, // זווית 45°
+                    intArrayOf(
+                        itemView.context.getColor(startColor),
+                        itemView.context.getColor(endColor)
+                    )
+                )
+                gradientDrawable.cornerRadius = 25f
+                linearLayoutContainer.background = gradientDrawable
+                //----------------------------------------------------------------------------
+
+
+
+
+                //  מחיקת עיר
                 ivDeleteFavorite.setOnClickListener {
                     onDeleteClick(favorite)
                 }
             }
         }
+
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteViewHolder {

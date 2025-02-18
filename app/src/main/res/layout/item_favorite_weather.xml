@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     app:cardCornerRadius="12dp"
+    android:background="@color/white"
     app:cardElevation="6dp">
 
     <LinearLayout
@@ -12,6 +13,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
+        android:background="@drawable/gradient_background"
+        android:id="@+id/linearLayoutContainer"
         android:gravity="center_vertical">
 
         <!-- שם העיר + המדינה בצד ימין | אייקון מזג האוויר בצד שמאל -->
@@ -73,6 +76,7 @@
             android:textStyle="italic"
             android:gravity="center"/>
 
+
         <!-- קו מפריד -->
         <View
             android:layout_width="match_parent"
@@ -80,43 +84,53 @@
             android:background="@color/bright_blue"
             android:layout_marginVertical="8dp"/>
 
-        <!-- מידע נוסף (מינימום, מקסימום, מרגיש כמו) -->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tvFeelsLike"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="3">
+            android:text="@string/label_feels_like"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:gravity="center"/>
+
+
+        <!-- קו מפריד -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bright_blue"
+            android:layout_marginVertical="8dp"/>
+        <!-- קו מפריד -->
+
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tvMinTemperature"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/label_temp"
+                android:text="@string/label_temp_min"
                 android:textSize="14sp"
                 android:textColor="@color/black"
-                android:gravity="center"/>
-
-            <TextView
-                android:id="@+id/tvFeelsLike"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/label_feels_like"
-                android:textSize="14sp"
-                android:textColor="@color/black"
-                android:gravity="center"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
             <TextView
                 android:id="@+id/tvMaxTemperature"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/label_temp"
+                android:text="@string/label_temp_max"
                 android:textSize="14sp"
                 android:textColor="@color/black"
-                android:gravity="center"/>
-        </LinearLayout>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <!-- קו מפריד -->
         <View
@@ -124,34 +138,38 @@
             android:layout_height="1dp"
             android:background="@color/bright_blue"
             android:layout_marginVertical="8dp"/>
+        <!-- קו מפריד -->
 
-        <!-- זריחה ושקיעה -->
-        <LinearLayout
+
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tvSunrise"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/label_sunrise"
                 android:textSize="14sp"
                 android:textColor="@color/black"
-                android:layout_weight="1"
-                android:gravity="center"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
             <TextView
                 android:id="@+id/tvSunset"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/label_sunset"
                 android:textSize="14sp"
                 android:textColor="@color/black"
-                android:layout_weight="1"
-                android:gravity="center"/>
-        </LinearLayout>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <!-- קו מפריד נוסף -->
         <View
@@ -160,33 +178,38 @@
             android:background="@color/bright_blue"
             android:layout_marginVertical="8dp"/>
 
-        <!-- לחות + מהירות הרוח -->
-        <LinearLayout
+        <!-- קו מפריד נוסף -->
+
+
+
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tvHumidity"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="@string/label_humidity"
                 android:textSize="14sp"
                 android:textColor="@color/black"
-                android:gravity="center"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
             <TextView
                 android:id="@+id/tvWindSpeed"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="@string/label_wind"
                 android:textSize="14sp"
                 android:textColor="@color/black"
-                android:gravity="center"/>
-        </LinearLayout>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- קו מפריד נוסף -->
         <View
@@ -194,6 +217,7 @@
             android:layout_height="1dp"
             android:background="@color/bright_blue"
             android:layout_marginVertical="8dp"/>
+        <!-- קו מפריד נוסף -->
 
         <!-- אייקון מחיקה -->
         <ImageView
@@ -202,7 +226,8 @@
             android:layout_height="30dp"
             android:src="@drawable/ic_delete"
             android:layout_gravity="end"
-            android:layout_marginTop="8dp"/>
+            android:layout_marginTop="8dp"
+            android:layoutDirection="locale"/>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

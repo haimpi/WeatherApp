@@ -15,6 +15,7 @@ import com.example.weatherapp.databinding.FragmentCitySearchBinding
 import com.example.weatherapp.models.WeatherResponse
 import com.example.weatherapp.ui.CitySearchViewModel
 import com.example.weatherapp.util.Resource
+import com.example.weatherapp.util.WeatherIconProvider
 import com.example.weatherapp.util.convertUnixToTime
 import dagger.hilt.android.AndroidEntryPoint
 import il.co.syntax.fullarchitectureretrofithiltkotlin.utils.autoCleared
@@ -94,7 +95,9 @@ class CitySearchFragment : Fragment() {
             tvWeatherDescription.text = getString(R.string.label_weather_description, weather?.weather?.firstOrNull()?.description ?: "--")
 
             val iconCode = weather?.weather?.firstOrNull()?.icon
-            ivWeatherIcon.setImageResource(viewModel.getWeatherIcon(iconCode))
+            val iconRes = WeatherIconProvider.getWeatherIcon(iconCode) // קריאה ישירה מה-WeatherIconProvider
+            ivWeatherIcon.setImageResource(iconRes)
+
         }
     }
 
